@@ -1,1 +1,60 @@
-<app-chat></app-chat>
+<div *ngIf="!isVisible"
+     class="open-chat"
+     (click)="isVisible=!isVisible"
+     title="Открыть чат"
+>
+  <i class="fa fa-commenting"></i>
+</div>
+
+<div *ngIf="isVisible"
+     class="chat"
+     ngDraggable
+     [handle]="DemoHandle"
+     ngResizable
+     [rzHandles]="'n,e,s,w,se,sw,ne,nw'"
+     [rzMinWidth]="250"
+     [rzMinHeight]="300"
+     [style.width.px]="width"
+     [style.height.px]="height"
+>
+  <div class="close"
+       (click)="isVisible = !isVisible; isEmojiPickerVisible = false"
+  >
+    <i class="fa fa-times-circle"></i>
+  </div>
+
+  <div class="chat-name"
+       #DemoHandle
+  >
+    <h2>Чат</h2>
+  </div>
+
+  <div class="messages">
+    <p *ngFor="let message of messages">{{ message }}</p>
+  </div>
+
+  <div class="send">
+    <input type="text"
+           placeholder="Введите сообщение..."
+           [formControl]="formMessage"
+           (keydown.enter)="send()"
+    >
+
+    <i class="fa fa-smile-o"
+       (click)="isEmojiPickerVisible = !isEmojiPickerVisible"
+    ></i>
+
+    <button type="button"
+            (click)="send()"
+            [disabled]="formMessage.invalid"
+    >
+      <i class="fa fa-arrow-circle-right"></i>
+    </button>
+  </div>
+</div>
+
+<emoji-mart *ngIf="isEmojiPickerVisible"
+            class="emoji-mart"
+            (emojiSelect)="addEmoji($event)"
+            title="Выбери эмодзи"
+></emoji-mart>
